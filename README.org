@@ -1,51 +1,51 @@
 #+TITLE: Z572's guix channel
+* Z572's guix channel
+** dependencies:
+ - flat's channels :: https://github.com/flatwhatson/guix-channel
 
-dependencies:
-- flat's channels :: https://github.com/flatwhatson/guix-channel
+** how to use
+ #+begin_src scheme
+   (cons* (channel
+           (name 'z572)
+           (url "https://notabug.org/Z572/z572-guix-channel"))
+          %default-channels)
+ #+end_src
 
-#+begin_src scheme
-  (cons* (channel
-          (name 'z572)
-          (url "https://notabug.org/Z572/z572-guix-channel"))
-         %default-channels)
-#+end_src
+** packages
 
+ This channel have free package:
 
-* packages
+ - emacs-bing-dict
+ - emacs-citre
+ - emacs-easy-escape
+ - emacs-highlight-quoted
+ - emacs-leaf-keywords
+ - emacs-meow
+ - emacs-puni
+ - emacs-winum
 
-This channel have free package:
+ TODO upsterm.  If you want, you can upsterm them to [[https://guix.gnu.org][guix]], not need add my name.
 
-- emacs-bing-dict
-- emacs-citre
-- emacs-easy-escape
-- emacs-highlight-quoted
-- emacs-leaf-keywords
-- emacs-meow
-- emacs-puni
-- emacs-winum
+ upsterming:
+ - emacs-telega 0.7.030 :: https://debbugs.gnu.org/50429
+  - emacs-telega-latest
+  - emacs-telega-server-latest
+  - emacs-telega-contrib-latest
 
-TODO upsterm.  If you want, you can upsterm them to [[https://guix.gnu.org][guix]], not need add my name.
+ And have some package can't upsterm to [[https://guix.gnu.org][guix]]:
 
-upsterming:
-- emacs-telega 0.7.030 :: https://debbugs.gnu.org/50429
- - emacs-telega-latest
- - emacs-telega-server-latest
- - emacs-telega-contrib-latest
+ - emacs-xeft :: unknow license
+ - emacs-next-pgtk-latest :: use git-checkout, and use flat's channel.
+ - emacs-with-tree-sitter :: use flat's channel, and not ready.
+   https://github.com/casouri/emacs
+   https://lists.gnu.org/archive/html/emacs-devel/2021-08/msg00246.html
+ - tree-sitter            :: copy define from https://debbugs.gnu.org/49946.
+ - v2ray                  :: not source build (golang package need too many).
 
-And have some package can't upsterm to [[https://guix.gnu.org][guix]]:
+** services
+ services provide:
 
-- emacs-xeft :: unknow license
-- emacs-next-pgtk-latest :: use git-checkout, and use flat's channel.
-- emacs-with-tree-sitter :: use flat's channel, and not ready.
-  https://github.com/casouri/emacs
-  https://lists.gnu.org/archive/html/emacs-devel/2021-08/msg00246.html
-- tree-sitter            :: copy define from https://debbugs.gnu.org/49946.
-- v2ray                  :: not source build (golang package need too many).
+ - v2ray :: maybe have some error.
 
-* services
-services provide:
-
-- v2ray :: maybe have some error.
-
-
-This guix channel is GPL3+
+** License
+  This guix channel is GPL3+
