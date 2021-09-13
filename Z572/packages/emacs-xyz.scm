@@ -135,7 +135,7 @@ for the Telegram messaging platform.")))
 
 (define-public emacs-telega-contrib-latest
   (package
-    (inherit emacs-telega-server-latest)
+    (inherit emacs-telega-latest)
     (name "emacs-telega-contrib")
     (arguments
      `(#:exclude
