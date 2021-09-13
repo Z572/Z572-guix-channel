@@ -152,7 +152,7 @@ for the Telegram messaging platform.")))
      `(("emacs-alert" ,emacs-alert)
        ("emacs-all-the-icons" ,emacs-all-the-icons)
        ("emacs-dashboard" ,emacs-dashboard)
-       ("emacs-telega" ,emacs-telega)
+       ("emacs-telega" ,emacs-telega-latest)
        ("emacs-transient" ,emacs-transient)))
     (synopsis "Contributed packages to Telega")
     (description "Telega-contrib is a collection of third-party
