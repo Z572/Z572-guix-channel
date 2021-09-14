@@ -27,10 +27,7 @@
  TODO upsterm.  If you want, you can upsterm them to [[https://guix.gnu.org][guix]], not need add my name.
 
  upsterming:
- - emacs-telega 0.7.030 :: https://debbugs.gnu.org/50429
-  - emacs-telega-latest
-  - emacs-telega-server-latest
-  - emacs-telega-contrib-latest
+  none
 
  And have some package can't upsterm to [[https://guix.gnu.org][guix]]:
 
