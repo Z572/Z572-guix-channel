@@ -18,8 +18,8 @@
       (branch "feature/pgtk")))))
 
 (define-public emacs-with-tree-sitter
-  (let ((commit "0e3384126893807ad5df4dbe24361c22e5d546d9")
-        (revision "0"))
+  (let ((commit "d41a1b7f70001ff043972c72a507cc42cb77694b")
+        (revision "1"))
     (package
       (inherit emacs-native-comp)
       (name "emacs-with-tree-sitter")
@@ -36,7 +36,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0q92bjpy44wdg4p2irmis3sj9c5a214cfb18hndfayzlmcir46ah"))))
+           "1lqnph0vzh18lgx9rdq31gl5flnc3pwrqr8w2blg5xx0a55bahf2"))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs-native-comp)
          ((#:configure-flags flags ''())
