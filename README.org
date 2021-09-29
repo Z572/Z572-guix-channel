@@ -15,7 +15,6 @@
 
  This channel have free package:
 
- - emacs-bing-dict
  - emacs-citre
  - emacs-easy-escape
  - emacs-highlight-quoted

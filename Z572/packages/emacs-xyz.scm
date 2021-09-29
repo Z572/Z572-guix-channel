@@ -68,33 +68,6 @@
        "Citre is an advanced Ctags (or actually, readtags) frontend for Emacs.")
       (license license:gpl3+))))
 
-(define-public emacs-bing-dict
-  (let ((commit "1d581aaa9622b34f8fb83af5579fa252aa24cfef")
-        (revision "0"))
-    (package
-      (name "emacs-bing-dict")
-      (version (git-version "0.2.4" revision commit))
-      (source
-       (origin
-         (method git-fetch)
-         (uri (git-reference
-               (url "https://github.com/cute-jumper/bing-dict.el")
-               (commit commit)))
-         (file-name (git-file-name name version))
-         (sha256
-          (base32
-           "1v0ncgnj9vv2r0qbwiipg63rlhnfjz8q23jx3la2l22l0i2lyivb"))))
-      (build-system emacs-build-system)
-      (home-page
-       "https://github.com/cute-jumper/bing-dict.el")
-      (synopsis
-       "Minimalists' English-Chinese Bing dictionary")
-      (description
-       "A **minimalists'** Emacs extension to search http://www.bing.com/dict.
-Support English to Chinese and Chinese to English.")
-      ;; from bing-dict.el head
-      (license license:gpl3+))))
-
 (define-public emacs-leaf-keywords
   ;;latest git tag is on May 29, 2019, 1.1.0, but leaf-keywords.el version is
   ;;2.0.5
