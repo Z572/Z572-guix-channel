@@ -30,43 +30,41 @@
   #:use-module (gnu packages video))
 
 (define-public emacs-citre
-  (let ((commit "b9bca2d86f58d59e7e170f7224c78753c18e58a8")
-        (revision "1"))
-    (package
-      (name "emacs-citre")
-      (version (git-version "0.1.1" revision commit))
-      (source
-       (origin
-         (method git-fetch)
-         (uri (git-reference
-               (url "https://github.com/universal-ctags/citre")
-               (commit commit)))
-         (file-name (git-file-name name version))
-         (sha256
-          (base32
-           "1nfr07j32c4pq6pvd432brq8w8zqrnmal6095871hg6a505i44kj"))))
-      (build-system emacs-build-system)
-      (arguments
-       `(#:phases
-         (modify-phases %standard-phases
-           (add-after 'unpack 'patch-ctag-path
-             (lambda* (#:key inputs #:allow-other-keys)
-               (let* ((u-ctags (assoc-ref inputs "universal-ctags"))
-                      (readtags (string-append u-ctags "/bin/readtags"))
-                      (ctags (string-append u-ctags "/bin/ctags")))
+  (package
+    (name "emacs-citre")
+    (version "0.2")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/universal-ctags/citre")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32
+         "10lryjy3771hs8lavh7818a5ia9ia1qwrhzfmgr5sb4c0gn36wcg"))))
+    (build-system emacs-build-system)
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (add-after 'unpack 'patch-ctag-path
+           (lambda* (#:key inputs #:allow-other-keys)
+             (let* ((u-ctags (assoc-ref inputs "universal-ctags"))
+                    (readtags (string-append u-ctags "/bin/readtags"))
+                    (ctags (string-append u-ctags "/bin/ctags")))
 
-                 (make-file-writable "citre-core.el")
-                 (make-file-writable "citre-ctags.el")
-                 (emacs-substitute-variables "citre-core.el"
-                   ("citre-readtags-program" readtags))
-                 (emacs-substitute-variables "citre-ctags.el"
-                   ("citre-ctags-program" ctags))))))))
-      (inputs `(("universal-ctags" ,universal-ctags)))
-      (home-page "https://github.com/universal-ctags/citre")
-      (synopsis "Ctags IDE on the True Editor")
-      (description
-       "Citre is an advanced Ctags (or actually, readtags) frontend for Emacs.")
-      (license license:gpl3+))))
+               (make-file-writable "citre-core.el")
+               (make-file-writable "citre-ctags.el")
+               (emacs-substitute-variables "citre-core.el"
+                 ("citre-readtags-program" readtags))
+               (emacs-substitute-variables "citre-ctags.el"
+                 ("citre-ctags-program" ctags))))))))
+    (inputs `(("universal-ctags" ,universal-ctags)))
+    (home-page "https://github.com/universal-ctags/citre")
+    (synopsis "Ctags IDE on the True Editor")
+    (description
+     "Citre is an advanced Ctags (or actually, readtags) frontend for Emacs.")
+    (license license:gpl3+)))
 
 (define-public emacs-leaf-keywords
   ;;latest git tag is on May 29, 2019, 1.1.0, but leaf-keywords.el version is
