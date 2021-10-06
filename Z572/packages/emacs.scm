@@ -47,9 +47,10 @@
        `(("tree-sitter" ,tree-sitter)
          ,@(package-inputs emacs-native-comp)))
       (native-search-paths
-       (list (search-path-specification
+       (cons (search-path-specification
               (variable "LD_LIBRARY_PATH")
-              (files '("lib/emacs"))))))))
+              (files '("lib/emacs")))
+             (package-native-search-paths emacs-native-comp))))))
 
 (define* (make-emacs-tree-sitter-module
           lang version hash-string #:key (commit (string-append "v" version))
