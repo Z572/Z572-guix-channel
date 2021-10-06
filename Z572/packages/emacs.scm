@@ -18,16 +18,13 @@
       (branch "feature/pgtk")))))
 
 (define-public emacs-with-tree-sitter
-  (let ((commit "350ae9cc19e478f08468443843f63bdf005d9d92")
-        (revision "3"))
+  (let ((commit "106d050ad5d02f673f8a089e1f10c1eacfedd124")
+        (revision "4"))
     (package
       (inherit emacs-native-comp)
       (name "emacs-with-tree-sitter")
       (version (git-version "28.0.50" revision commit))
       (source
-       ;; (git-checkout
-       ;;  (url "https://github.com/casouri/emacs")
-       ;;  (branch "ts"))
        (origin
          (method git-fetch)
          (uri (git-reference
@@ -36,11 +33,16 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "00bpg4cg46pj6kp3rmny47d6434rsb6cxppw6jvf2shsly24578m"))))
+           "1qpnha1cy1mkj373liw2wmn727hd2znim3c71n21fia7d6qq8b79"))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs-native-comp)
          ((#:configure-flags flags ''())
           `(cons* "--with-tree-sitter" ,flags))))
       (inputs
        `(("tree-sitter" ,tree-sitter)
-         ,@(package-inputs emacs-native-comp))))))
+         ,@(package-inputs emacs-native-comp)))
+      (native-search-paths
+       (list (search-path-specification
+              (variable "LD_LIBRARY_PATH")
+              (files '("lib/emacs"))))))))
+
