@@ -35,6 +35,7 @@
  - emacs-with-tree-sitter :: use flat's channel, and not ready.
    https://github.com/casouri/emacs
    https://lists.gnu.org/archive/html/emacs-devel/2021-08/msg00246.html
+ - texmacs-with-guile3
  - tree-sitter            :: copy define from https://debbugs.gnu.org/49946.
  - v2ray                  :: not source build (golang package need too many).
 
