@@ -221,39 +221,37 @@ numbers.")
       (license license:bsd-2))))
 
 (define-public emacs-xeft
-  (let ((commit "fa6343271567d010e72c5aeafbb23f665e89b8c4")
-        (revision "2"))
-    (package
-      (name "emacs-xeft")
-      (version (git-version "0" revision commit))
-      (source (origin
-                (method git-fetch)
-                (uri (git-reference
-                      (url "https://github.com/casouri/xeft")
-                      (commit commit)))
-                (file-name (git-file-name name version))
-                (sha256
-                 (base32
-                  "1jl5bmdn8q6gl632q2zl0ijngjphmqiahx86m72hvcx97sdv1raf"))
-                (modules '((guix build utils)))
-                (snippet
-                 '(delete-file "emacs-module.h"))))
-      (build-system emacs-build-system)
-      (arguments
-       `(#:include
-         (cons "\\.so$" %default-include)
-         #:phases
-         (modify-phases %standard-phases
-           (add-before 'install 'build-emacs-module
-             (lambda* (#:key outputs #:allow-other-keys)
-               (invoke "make"
-                       (string-append "CXX=" ,(cxx-for-target))
-                       (string-append "PREFIX=" (assoc-ref outputs "out"))))))))
-      (inputs
-       `(("xapian" ,xapian)))
-      (home-page "https://github.com/casouri/xeft")
-      (synopsis "note searching")
-      (description "Xeft provides a dynamic module that exposes a very basic
+  (package
+    (name "emacs-xeft")
+    (version "1.1")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/casouri/xeft")
+                    (commit (string-append "v" version))))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "0b43v0lcgad9005bldsk27nkn0mzhh678na9c0dnlvzhnx254h8g"))
+              (modules '((guix build utils)))
+              (snippet
+               '(delete-file "emacs-module.h"))))
+    (build-system emacs-build-system)
+    (arguments
+     `(#:include
+       (cons "\\.so$" %default-include)
+       #:phases
+       (modify-phases %standard-phases
+         (add-before 'install 'build-emacs-module
+           (lambda* (#:key outputs #:allow-other-keys)
+             (invoke "make"
+                     (string-append "CXX=" ,(cxx-for-target))
+                     (string-append "PREFIX=" (assoc-ref outputs "out"))))))))
+    (inputs
+     `(("xapian" ,xapian)))
+    (home-page "https://github.com/casouri/xeft")
+    (synopsis "note searching")
+    (description "Xeft provides a dynamic module that exposes a very basic
 indexing feature to Emacs Lisp, that lets you index and search a text files.")
-      ;; not know license
-      (license #f))))
+    ;; not know license
+    (license #f)))
