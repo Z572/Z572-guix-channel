@@ -2,6 +2,10 @@
   #:use-module (gnu packages base)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages emacs)
+  #:use-module (gnu packages image)
+  #:use-module (gnu packages xorg)
+  #:use-module (gnu packages webkit)
+  #:use-module (gnu packages gnome)
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (guix git-download)
@@ -21,6 +25,39 @@
      (git-checkout
       (url "https://git.savannah.gnu.org/git/emacs.git/")
       (branch "feature/pgtk")))))
+
+(define-public emacs-next-29
+  (let ((commit "44c856dccc7891a9f762ebef1e386ac9eef0a920" )
+        (revision "0"))
+    (package
+      (inherit emacs-pgtk-native-comp)
+      (name "emacs-next-29")
+      (version (git-version "29.0.5" revision commit))
+      (source
+       (origin
+         (inherit (package-source emacs-native-comp))
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://git.savannah.gnu.org/git/emacs.git/")
+               (commit commit)))
+         (sha256 (base32 "0ak6993ga1b777c86jqkngcsc6jwjf344idfpakjmkkr47s1d1bi"))
+         (file-name (git-file-name name version))))
+      (arguments
+       (substitute-keyword-arguments (package-arguments emacs-native-comp)
+         ((#:configure-flags flags ''())
+          `(cons*
+            "--with-xwidgets"
+            "--with-xinput2"
+            ,flags))))
+      (propagated-inputs
+       `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
+         ("glib-networking" ,glib-networking)
+         ,@(package-propagated-inputs emacs-native-comp)))
+      (inputs
+       `(("libwebp" ,libwebp)
+         ("xinput" ,xinput)
+         ("webkitgtk" ,webkitgtk)
+         ,@(package-inputs emacs-native-comp))))))
 
 (define-public emacs-with-tree-sitter
   (let ((commit "106d050ad5d02f673f8a089e1f10c1eacfedd124")
