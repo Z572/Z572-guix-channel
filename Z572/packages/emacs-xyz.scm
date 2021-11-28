@@ -47,7 +47,7 @@
     (arguments
      `(#:phases
        (modify-phases %standard-phases
-         (add-after 'unpack 'patch-ctag-path
+         (add-after 'unpack 'patch-ctags-path
            (lambda* (#:key inputs #:allow-other-keys)
              (let* ((u-ctags (assoc-ref inputs "universal-ctags"))
                     (readtags (string-append u-ctags "/bin/readtags"))
@@ -58,8 +58,18 @@
                (emacs-substitute-variables "citre-core.el"
                  ("citre-readtags-program" readtags))
                (emacs-substitute-variables "citre-ctags.el"
-                 ("citre-ctags-program" ctags))))))))
-    (inputs `(("universal-ctags" ,universal-ctags)))
+                 ("citre-ctags-program" ctags)))))
+         (add-after 'unpack 'patch-global-path
+           (lambda* (#:key inputs #:allow-other-keys)
+             (let* ((global (assoc-ref inputs "global"))
+                    (global-program (string-append global "/bin/global"))
+                    (gtags-program (string-append global "/bin/gtags")))
+               (make-file-writable "citre-global.el")
+               (emacs-substitute-variables "citre-global.el"
+                 ("citre-global-program" global-program)
+                 ("citre-gtags-program" gtags-program))))))))
+    (inputs `(("universal-ctags" ,universal-ctags)
+              ("global" ,global)))
     (home-page "https://github.com/universal-ctags/citre")
     (synopsis "Ctags IDE on the True Editor")
     (description
