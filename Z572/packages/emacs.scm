@@ -56,7 +56,7 @@
       (inputs
        `(("libwebp" ,libwebp)
          ("xinput" ,xinput)
-         ("webkitgtk" ,webkitgtk)
+         ("webkitgtk" ,webkitgtk-with-libsoup2)
          ,@(package-inputs emacs-native-comp))))))
 
 (define-public emacs-with-tree-sitter
