@@ -56,7 +56,9 @@
       (inputs
        `(("libwebp" ,libwebp)
          ("xinput" ,xinput)
-         ("webkitgtk" ,webkitgtk-with-libsoup2)
+         ;;; for core-updates-frozen
+         ("webkitgtk" ,(or (false-if-exception webkitgtk-with-libsoup2)
+                           webkitgtk))
          ,@(package-inputs emacs-native-comp))))))
 
 (define-public emacs-with-tree-sitter
