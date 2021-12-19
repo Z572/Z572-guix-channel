@@ -2,6 +2,7 @@
   #:use-module (gnu packages base)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages emacs)
+  #:use-module (gnu packages sqlite)
   #:use-module (gnu packages image)
   #:use-module (gnu packages xorg)
   #:use-module (gnu packages webkit)
@@ -27,8 +28,8 @@
       (branch "feature/pgtk")))))
 
 (define-public emacs-next-29
-  (let ((commit "44c856dccc7891a9f762ebef1e386ac9eef0a920" )
-        (revision "0"))
+  (let ((commit "9051a93747002c08ddae8e391a9b29a08d118588")
+        (revision "1"))
     (package
       (inherit emacs-pgtk-native-comp)
       (name "emacs-next-29")
@@ -38,9 +39,11 @@
          (inherit (package-source emacs-native-comp))
          (method git-fetch)
          (uri (git-reference
-               (url "https://git.savannah.gnu.org/git/emacs.git/")
+               (url
+                "https://git.savannah.gnu.org/git/emacs.git/"
+                )
                (commit commit)))
-         (sha256 (base32 "0ak6993ga1b777c86jqkngcsc6jwjf344idfpakjmkkr47s1d1bi"))
+         (sha256 (base32 "0lp6flp92fp30p3p5xln5gzgsdwmgf2cb1cyzvf2sm8zh7ql40vi"))
          (file-name (git-file-name name version))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs-native-comp)
@@ -50,16 +53,12 @@
             "--with-xinput2"
             ,flags))))
       (propagated-inputs
-       `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
-         ("glib-networking" ,glib-networking)
-         ,@(package-propagated-inputs emacs-native-comp)))
+       (modify-inputs (package-propagated-inputs emacs-native-comp)
+                      (prepend gsettings-desktop-schemas glib-networking)))
       (inputs
-       `(("libwebp" ,libwebp)
-         ("xinput" ,xinput)
-         ;;; for core-updates-frozen
-         ("webkitgtk" ,(or (false-if-exception webkitgtk-with-libsoup2)
-                           webkitgtk))
-         ,@(package-inputs emacs-native-comp))))))
+       (modify-inputs (package-inputs emacs-native-comp)
+                      (prepend libwebp xinput sqlite
+                               webkitgtk-with-libsoup2))))))
 
 (define-public emacs-with-tree-sitter
   (let ((commit "106d050ad5d02f673f8a089e1f10c1eacfedd124")
