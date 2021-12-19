@@ -31,7 +31,6 @@
  And have some package can't upsterm to [[https://guix.gnu.org][guix]]:
 
  - emacs-xeft :: unknow license
- - emacs-next-pgtk-latest :: use git-checkout, and use flat's channel.
  - emacs-with-tree-sitter :: use flat's channel, and not ready.
    https://github.com/casouri/emacs
    https://lists.gnu.org/archive/html/emacs-devel/2021-08/msg00246.html

@@ -17,16 +17,6 @@
   #:use-module (gnu packages gcc)
   #:use-module ((guix licenses) #:prefix license:))
 
-(define-public emacs-next-pgtk-latest
-  (package
-    (inherit emacs-pgtk-native-comp)
-    (name "emacs-next-pgtk-latest")
-    (version "git.pgtk")
-    (source
-     (git-checkout
-      (url "https://git.savannah.gnu.org/git/emacs.git/")
-      (branch "feature/pgtk")))))
-
 (define-public emacs-next-29
   (let ((commit "9051a93747002c08ddae8e391a9b29a08d118588")
         (revision "1"))
