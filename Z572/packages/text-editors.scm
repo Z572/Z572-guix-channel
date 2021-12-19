@@ -2,6 +2,7 @@
   #:use-module (guix packages)
   #:use-module (guix git-download)
   #:use-module (guix utils)
+  #:use-module (guix build-system gnu)
   #:use-module (gnu packages guile)
   #:use-module (gnu packages text-editors))
 
@@ -21,9 +22,10 @@
          (file-name (git-file-name name version))
          (sha256
           (base32 "1f95w66da13hkk2svfxgmz5arqy968hvhx9jlwmv8gc04swdcxjk"))))
+      (build-system gnu-build-system)
       (inputs
-       `(("guile" ,guile-3.0-latest)
-         ,@(package-inputs texmacs)))
+       (modify-inputs (package-inputs texmacs)
+         (replace "guile" guile-3.0-latest)))
       (arguments (substitute-keyword-arguments (package-arguments texmacs)
                    ((#:phases phases)
                     `(modify-phases ,phases
