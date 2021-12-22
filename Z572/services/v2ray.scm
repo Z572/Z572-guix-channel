@@ -15,6 +15,7 @@
             v2ray-configuration?
             v2ray-configuration-package
             v2ray-configuration-json
+            v2ray-configuration-mappings
             v2ray-service-type))
 
 (define-record-type* <v2ray-configuration>
@@ -24,7 +25,9 @@
   (package v2ray-configuration-package
            (default v2ray))
   (json     v2ray-configuration-json
-            (default "{}")))
+            (default "{}"))
+  (mappings v2ray-configuration-mappings
+            (default '())))
 
 (define %v2ray-accounts
   (list (user-account
@@ -66,6 +69,7 @@
                 ;; #:namespaces '#$(delq 'net %namespaces)
                 #:log-file "/var/log/v2ray.log"
                 #:user "v2ray"
+                #:mappings #$(v2ray-configuration-mappings config)
                 #:group "v2ray"))
       (stop #~(make-kill-destructor))))))
 
