@@ -27,7 +27,9 @@
   (json     v2ray-configuration-json
             (default "{}"))
   (mappings v2ray-configuration-mappings
-            (default '())))
+            (default '()))
+  (loglevel v2ray-configuration-loglevel
+            (default "warning")))
 
 (define %v2ray-accounts
   (list (user-account
@@ -52,8 +54,16 @@
 
 (define (v2ray-shepherd-service config)
   "Return a <shepherd-service> for v2ray with CONFIG."
+  (define log-config
+    (plain-file "v2ray-log-config"
+                (scm->json-string
+                 `((log . ((loglevel . ,(v2ray-configuration-loglevel config))
+                           (access . "/var/log/v2ray/access.log")
+                           ("error" . "/var/log/v2ray/error.log")))))))
   (define v2ray-command
-    #~(list #$(v2ray-binary config) "--config" #$(v2ray-json config)))
+    #~(list #$(v2ray-binary config)
+            "--config" #$(v2ray-json config)
+            "--config" #$log-config))
   (list
    (with-imported-modules (source-module-closure
                            '((gnu build shepherd)
@@ -69,17 +79,25 @@
                 ;; #:namespaces '#$(delq 'net %namespaces)
                 #:log-file "/var/log/v2ray.log"
                 #:user "v2ray"
-                #:mappings #$(v2ray-configuration-mappings config)
+                #:mappings (cons* (file-system-mapping
+                                   (source "/var/log/v2ray")
+                                   (target source)
+                                   (writable? #t))
+                                  (file-system-mapping
+                                   (source "/etc/ssl/certs")
+                                   (target source))
+                                  (list #$@(v2ray-configuration-mappings config)))
                 #:group "v2ray"))
       (stop #~(make-kill-destructor))))))
 
 (define (%v2ray-activation config)
   "Return an activation gexp for V2RAY with CONFIG"
 
-  (with-imported-modules '((guix build utils))
-    #~(invoke
-       #$(v2ray-binary config)
-       "--test" #$(v2ray-json config))))
+  #~(begin
+      (mkdir-p "/var/log/v2ray")
+      (chown "/var/log/v2ray"
+             (passwd:uid (getpw "v2ray"))
+             (group:gid (getgr "v2ray")))))
 
 (define v2ray-service-type
   (service-type
@@ -87,8 +105,8 @@
    (extensions
     (list (service-extension account-service-type
                              (const %v2ray-accounts))
-          ;; (service-extension activation-service-type
-          ;;                    %v2ray-activation)
+          (service-extension activation-service-type
+                             %v2ray-activation)
           (service-extension shepherd-root-service-type
                              v2ray-shepherd-service)))
    (default-value (v2ray-configuration))
