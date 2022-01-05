@@ -7,7 +7,7 @@
 (define-public v2ray
   (package
     (name "v2ray")
-    (version "4.42.2")
+    (version "4.44.0")
     (source (origin
               (method url-fetch/zipbomb)
               (uri (string-append
@@ -16,7 +16,7 @@
 
               (sha256
                (base32
-                "0ys5pnirklqhphlyv422f38qq294ng8g3x8xy7nsx8v05rfn3r1p"))))
+                "0s4fa88pl5x2bcyqcqhk4map4vfsmplhpnwdl74j6pgw0zi1psy6"))))
     (build-system copy-build-system)
     (arguments
      '(#:install-plan
