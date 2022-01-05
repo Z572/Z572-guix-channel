@@ -51,8 +51,8 @@
                                webkitgtk-with-libsoup2))))))
 
 (define-public emacs-with-tree-sitter
-  (let ((commit "106d050ad5d02f673f8a089e1f10c1eacfedd124")
-        (revision "4"))
+  (let ((commit "cbcca6d98416b38c9fcb3568c07e228d2a19c95b")
+        (revision "5"))
     (package
       (inherit emacs-native-comp)
       (name "emacs-with-tree-sitter")
@@ -66,7 +66,7 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1qpnha1cy1mkj373liw2wmn727hd2znim3c71n21fia7d6qq8b79"))))
+           "092pbxsc56cy437f2jdr4ilp1qv2dvgsh8yf5ifq1dkk25fqg9yx"))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs-native-comp)
          ((#:configure-flags flags ''())
