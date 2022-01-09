@@ -19,7 +19,6 @@
  - emacs-easy-escape
  - emacs-highlight-quoted
  - emacs-leaf-keywords
- - emacs-meow
  - emacs-puni
  - emacs-winum
 

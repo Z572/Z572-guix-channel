@@ -178,33 +178,6 @@ numbers.")
       (description "Customizable soft deletion commands")
       (license license:gpl3+))))
 
-(define-public emacs-meow
-  (let ((commit "3e58697695327d1ecf2a210af645e8f2db845c32")
-        (revision "1"))
-    (package
-      (name "emacs-meow")
-      (version (git-version "1.0.2" revision commit))
-      (source
-       (origin
-         (method git-fetch)
-         (uri (git-reference
-               (url "https://github.com/DogLooksGood/meow")
-               (commit commit)))
-         (file-name (git-file-name name version))
-         (sha256
-          (base32
-           "0fl9fc7sibivna92ddnh6vv271qykkn9bw97nak1cnn9isi5hvn6"))))
-      (build-system emacs-build-system)
-      (propagated-inputs
-       `(("emacs-dash" ,emacs-dash)
-         ("emacs-s" ,emacs-s)))
-      (home-page
-       "https://github.com/DogLooksGood/meow")
-      (synopsis "Modal Editing On Wheel")
-      (description
-       "Enable `meow-global-mode' to activate modal editing.")
-      (license license:gpl3+))))
-
 (define-public emacs-highlight-quoted
   (let ((commit "24103478158cd19fbcfb4339a3f1fa1f054f1469")
         (revision "0"))
