@@ -18,37 +18,31 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public emacs-next-29
-  (let ((commit "6719a3ccabec33e010aa4a42be2ee07e4e219b3c")
-        (revision "2"))
+  (let ((commit "ecea3f2c8322ca43cbde9976fa6e658100cc2b99") (revision "3"))
     (package
       (inherit emacs-pgtk-native-comp)
       (name "emacs-next-29")
       (version (git-version "29.0.5" revision commit))
-      (source
-       (origin
-         (inherit (package-source emacs-native-comp))
-         (method git-fetch)
-         (uri (git-reference
-               (url
-                "https://git.savannah.gnu.org/git/emacs.git/"
-                )
-               (commit commit)))
-         (sha256 (base32 "0va15jv8zdniryzi0saddrrh5r4w6n7x4vvbipg2wxpi4dqj3ri4"))
-         (file-name (git-file-name name version))))
+      (source (origin
+                (inherit (package-source emacs-native-comp))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://git.savannah.gnu.org/git/emacs.git/")
+                      (commit commit)))
+                (sha256
+                 (base32
+                  "08ywf39baq4k921iykd1pkipppqgarnqv2vj7ya01ay3ldpnyrwz"))
+                (file-name (git-file-name name version))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs-native-comp)
-         ((#:configure-flags flags ''())
-          `(cons*
-            "--with-xwidgets"
-            "--with-xinput2"
-            ,flags))))
-      (propagated-inputs
-       (modify-inputs (package-propagated-inputs emacs-native-comp)
-                      (prepend gsettings-desktop-schemas glib-networking)))
-      (inputs
-       (modify-inputs (package-inputs emacs-native-comp)
-                      (prepend libwebp xinput sqlite
-                               webkitgtk-with-libsoup2))))))
+         ((#:configure-flags flags
+           ''()) `(cons* "--with-xwidgets" "--with-xinput2"
+                         ,flags))))
+      (propagated-inputs (modify-inputs (package-propagated-inputs
+                                         emacs-native-comp)
+                           (prepend gsettings-desktop-schemas glib-networking)))
+      (inputs (modify-inputs (package-inputs emacs-native-comp)
+                (prepend libwebp xinput sqlite webkitgtk-with-libsoup2))))))
 
 (define-public emacs-with-tree-sitter
   (let ((commit "cbcca6d98416b38c9fcb3568c07e228d2a19c95b")
