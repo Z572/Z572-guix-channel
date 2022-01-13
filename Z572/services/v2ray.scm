@@ -5,6 +5,7 @@
   #:use-module (gnu services shepherd)
   #:use-module (guix modules)
   #:use-module (ice-9 match)
+  #:use-module (gnu services admin)
   #:use-module (json)
   #:use-module (gnu system shadow)
   #:use-module (gnu packages admin)
@@ -99,6 +100,15 @@
              (passwd:uid (getpw "v2ray"))
              (group:gid (getgr "v2ray")))))
 
+(define %v2ray-log-rotations
+  (list (log-rotation
+         (files (list "/var/log/v2ray/error.log"
+                      "/var/log/v2ray/access.log"))
+         (options '(;; Run post-rotate once per rotation
+                    "sharedscripts"
+                    ;; Append .gz to rotated files
+                    "storefile @FILENAME.@COMP_EXT")))))
+
 (define v2ray-service-type
   (service-type
    (name 'v2ray)
@@ -107,6 +117,8 @@
                              (const %v2ray-accounts))
           (service-extension activation-service-type
                              %v2ray-activation)
+          (service-extension rottlog-service-type
+                             (const %v2ray-log-rotations))
           (service-extension shepherd-root-service-type
                              v2ray-shepherd-service)))
    (default-value (v2ray-configuration))
