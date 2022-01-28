@@ -18,7 +18,7 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public emacs-next-29
-  (let ((commit "46f24bf08f6cc12aa8945ae0257c810a59a8803c") (revision "4"))
+  (let ((commit "12d3c4831aa39974814604a3d13b8033d75441e6") (revision "5"))
     (package
       (inherit emacs-pgtk-native-comp)
       (name "emacs-next-29")
@@ -31,7 +31,7 @@
                       (commit commit)))
                 (sha256
                  (base32
-                  "0vi2hlznz3rjhgxm1wa01dgyhjmh1lzpynpz81hn8yvzja3qfw8x"))
+                  "12zg8jwf0vdzjyflqygc74sgw1rkkb9300gq5vsh0b5s6zkziig0"))
                 (file-name (git-file-name name version))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs-native-comp)
