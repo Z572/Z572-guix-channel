@@ -157,27 +157,6 @@ ELisp regular expressions more readable.")
 numbers.")
       (license license:gpl3+))))
 
-(define-public emacs-puni
-  (let ((commit "3a3272c881945f0dfb4467f7f053d0853f612186")
-        (revision "0"))
-    (package
-      (name "emacs-puni")
-      (version (git-version "0" revision commit))
-      (source (origin
-                (method git-fetch)
-                (uri (git-reference
-                      (url "https://github.com/AmaiKinono/puni")
-                      (commit commit)))
-                (file-name (git-file-name name version))
-                (sha256
-                 (base32
-                  "1m2z4sif8558qyjzp33kfbjr1laz3nh79qbpzbnykk0j73q5zb9z"))))
-      (build-system emacs-build-system)
-      (home-page "https://github.com/AmaiKinono/puni")
-      (synopsis "Parentheses Universalistic")
-      (description "Customizable soft deletion commands")
-      (license license:gpl3+))))
-
 (define-public emacs-highlight-quoted
   (let ((commit "24103478158cd19fbcfb4339a3f1fa1f054f1469")
         (revision "0"))

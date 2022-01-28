@@ -19,7 +19,6 @@
  - emacs-easy-escape
  - emacs-highlight-quoted
  - emacs-leaf-keywords
- - emacs-puni
  - emacs-winum
 
  TODO upsterm.  If you want, you can upsterm them to [[https://guix.gnu.org][guix]], not need add my name.
