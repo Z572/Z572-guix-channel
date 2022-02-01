@@ -3,6 +3,7 @@
   #:use-module (gnu packages emacs-xyz)
   #:use-module (gnu packages emacs)
   #:use-module (guix packages)
+  #:use-module (guix gexp)
   #:use-module (guix build-system emacs)
   #:use-module (gnu packages search)
   #:use-module (guix git-download)
@@ -33,43 +34,38 @@
   (package
     (name "emacs-citre")
     (version "0.2")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/universal-ctags/citre")
-             (commit (string-append "v" version))))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32
-         "10lryjy3771hs8lavh7818a5ia9ia1qwrhzfmgr5sb4c0gn36wcg"))))
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/universal-ctags/citre")
+                    (commit (string-append "v" version))))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "10lryjy3771hs8lavh7818a5ia9ia1qwrhzfmgr5sb4c0gn36wcg"))))
     (build-system emacs-build-system)
     (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         (add-after 'unpack 'patch-ctags-path
-           (lambda* (#:key inputs #:allow-other-keys)
-             (let* ((u-ctags (assoc-ref inputs "universal-ctags"))
-                    (readtags (string-append u-ctags "/bin/readtags"))
-                    (ctags (string-append u-ctags "/bin/ctags")))
-
-               (make-file-writable "citre-core.el")
-               (make-file-writable "citre-ctags.el")
-               (emacs-substitute-variables "citre-core.el"
-                 ("citre-readtags-program" readtags))
-               (emacs-substitute-variables "citre-ctags.el"
-                 ("citre-ctags-program" ctags)))))
-         (add-after 'unpack 'patch-global-path
-           (lambda* (#:key inputs #:allow-other-keys)
-             (let* ((global (assoc-ref inputs "global"))
-                    (global-program (string-append global "/bin/global"))
-                    (gtags-program (string-append global "/bin/gtags")))
-               (make-file-writable "citre-global.el")
-               (emacs-substitute-variables "citre-global.el"
-                 ("citre-global-program" global-program)
-                 ("citre-gtags-program" gtags-program))))))))
-    (inputs `(("universal-ctags" ,universal-ctags)
-              ("global" ,global)))
+     (list
+      #:phases #~(modify-phases %standard-phases
+                   (add-after 'unpack 'patch-ctags-path
+                     (lambda* (#:key inputs #:allow-other-keys)
+                       (let ((readtags
+                              (search-input-file inputs "/bin/readtags"))
+                             (ctags (search-input-file inputs "/bin/ctags")))
+                         (emacs-substitute-variables "citre-core.el"
+                           ("citre-readtags-program" readtags))
+                         (emacs-substitute-variables "citre-ctags.el"
+                           ("citre-ctags-program" ctags)))))
+                   (add-after 'unpack 'patch-global-path
+                     (lambda* (#:key inputs #:allow-other-keys)
+                       (let ((global-program
+                              (search-input-file inputs "/bin/global"))
+                             (gtags-program
+                              (search-input-file inputs "/bin/gtags")))
+                         (emacs-substitute-variables "citre-global.el"
+                           ("citre-global-program" global-program)
+                           ("citre-gtags-program" gtags-program))))))))
+    (inputs (list universal-ctags global))
     (home-page "https://github.com/universal-ctags/citre")
     (synopsis "Ctags IDE on the True Editor")
     (description
