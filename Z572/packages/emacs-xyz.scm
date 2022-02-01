@@ -102,11 +102,11 @@ keywords that are dependent on an external package.")
       (license license:gpl3+))))
 
 (define-public emacs-easy-escape
-  (let ((commit "a6449f22cb97160ee1c90121968de89e193268df")
+  (let ((commit "938497a21e65ba6b3ff8ec90e93a6d0ab18dc9b4")
         (revision "0"))
     (package
       (name "emacs-easy-escape")
-      (version (git-version "0.1" revision commit))
+      (version (git-version "0.2.1" revision commit))
       (source
        (origin
          (method git-fetch)
@@ -116,7 +116,7 @@ keywords that are dependent on an external package.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "1spbavcs4a3vn1ggdcgwgb2wvq4lbk74xyfagr4y5b5w2azlkh51"))))
+           "0bqwn6cd7lrk7f8vgcvclryvlpxvl2bndsmwmbn0zxmvqkdba7l1"))))
       (build-system emacs-build-system)
       (home-page
        "https://github.com/cpitclaudel/easy-escape")
