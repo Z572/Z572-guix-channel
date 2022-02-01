@@ -3,34 +3,34 @@
   #:use-module (guix build-system gnu)
   #:use-module (guix git-download)
   #:use-module (guix packages)
+  #:use-module (guix gexp)
   #:use-module (guix utils))
 
 (define-public tree-sitter
   (package
     (name "tree-sitter")
-    (version "0.20.2")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/tree-sitter/tree-sitter")
-             (commit (string-append "v" version))))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32
-         "0j3f9rvfnd59l9wcfay18ffvdzb68cv2v4kybixjjp5mrbkx492w"))))
+    (version "0.20.4")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/tree-sitter/tree-sitter")
+                    (commit (string-append "v" version))))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "1yldgdbf3l5l4ki52abdf81nwkcbvg219gwr3ydcjwfsg7hf7zhz"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:make-flags
-       (list (string-append "CC=" ,(cc-for-target))
-             (string-append "PREFIX=" (assoc-ref %outputs "out")))
-       #:tests? #f   ;; No check target.
+     `(#:make-flags ,#~(list (string-append "CC=" #$(cc-for-target))
+                             (string-append "PREFIX=" #$output))
+       #:tests? #f ;No check target.
        #:phases
        (modify-phases %standard-phases
          (delete 'configure))))
     (home-page "https://tree-sitter.github.io/tree-sitter/")
     (synopsis "Incremental parsing system for programming tools")
-    (description "Tree-sitter is a parser generator tool and an incremental
+    (description
+     "Tree-sitter is a parser generator tool and an incremental
 parsing library.  It can build a concrete syntax tree for a source file and
 efficiently update the syntax tree as the source file is edited.
 
