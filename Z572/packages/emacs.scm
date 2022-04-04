@@ -18,31 +18,32 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public emacs-next-29
-  (let ((commit "6ef9dc7797729a547dace431f57a73fe278172cc") (revision "9"))
+  (let ((emacs emacs-pgtk-native-comp)
+        (commit "f365607bc059169e5aa9f98c8418661d6fc6477d") (revision "10"))
     (package
-      (inherit emacs-pgtk-native-comp)
+      (inherit emacs)
       (name "emacs-next-29")
       (version (git-version "29.0.5" revision commit))
       (source (origin
-                (inherit (package-source emacs-native-comp))
+                (inherit (package-source emacs))
                 (method git-fetch)
                 (uri (git-reference
                       (url "https://git.savannah.gnu.org/git/emacs.git/")
                       (commit commit)))
                 (sha256
                  (base32
-                  "1sq5p7wd7cgflqm67xw20c2nw9cghlwqprdk0yixckwf38a4fj39"))
+                  "1vlsziii42m37x8r6an1p3r249mrwb0j78xplhiiw1hcl0yak4wm"))
                 (file-name (git-file-name name version))))
       (arguments
-       (substitute-keyword-arguments (package-arguments emacs-native-comp)
+       (substitute-keyword-arguments (package-arguments emacs)
          ((#:configure-flags flags
            ''()) `(cons* "--with-xwidgets" "--with-xinput2"
                          ,flags))))
       (propagated-inputs (modify-inputs (package-propagated-inputs
-                                         emacs-native-comp)
-                           (prepend gsettings-desktop-schemas glib-networking)))
-      (inputs (modify-inputs (package-inputs emacs-native-comp)
-                (prepend libwebp xinput sqlite webkitgtk-with-libsoup2))))))
+                                         emacs)
+                                        (prepend gsettings-desktop-schemas glib-networking)))
+      (inputs (modify-inputs (package-inputs emacs)
+                             (prepend libwebp xinput sqlite webkitgtk-with-libsoup2))))))
 
 (define-public emacs-with-tree-sitter
   (let ((commit "cbcca6d98416b38c9fcb3568c07e228d2a19c95b")
