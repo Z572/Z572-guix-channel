@@ -7,12 +7,12 @@
   #:use-module (gnu packages xorg)
   #:use-module (gnu packages webkit)
   #:use-module (gnu packages gnome)
+  #:use-module (gnu packages text-editors)
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (guix git-download)
   #:use-module (guix build-system trivial)
   #:use-module (guix git)
-  #:use-module (Z572 packages tree-sitter)
   #:use-module (flat packages emacs)
   #:use-module (gnu packages gcc)
   #:use-module ((guix licenses) #:prefix license:))
@@ -46,8 +46,8 @@
                              (prepend libwebp xinput sqlite webkitgtk-with-libsoup2))))))
 
 (define-public emacs-with-tree-sitter
-  (let ((commit "cbcca6d98416b38c9fcb3568c07e228d2a19c95b")
-        (revision "5"))
+  (let ((commit "b74eedc7042f7e90e6a9c79e9c58f832d6c71999")
+        (revision "6"))
     (package
       (inherit emacs-native-comp)
       (name "emacs-with-tree-sitter")
@@ -61,14 +61,14 @@
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "092pbxsc56cy437f2jdr4ilp1qv2dvgsh8yf5ifq1dkk25fqg9yx"))))
+           "0k05p1x8nq19sk51rs7vm53xpycxwaf1xxsphdx8h41iys9309xj"))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs-native-comp)
          ((#:configure-flags flags ''())
           `(cons* "--with-tree-sitter" ,flags))))
       (inputs
-       `(("tree-sitter" ,tree-sitter)
-         ,@(package-inputs emacs-native-comp)))
+       (modify-inputs (package-inputs emacs-native-comp)
+                      (prepend tree-sitter)))
       (native-search-paths
        (cons (search-path-specification
               (variable "LD_LIBRARY_PATH")
