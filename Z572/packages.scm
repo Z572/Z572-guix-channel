@@ -1,0 +1,15 @@
+(define-module (Z572 packages)
+  #:use-module (guix packages)
+  #:use-module (guix git-download)
+  #:use-module (guix download)
+  #:use-module ((guix licenses) #:prefix license:)
+  #:export (package*))
+
+(define-syntax package*
+  (lambda (x)
+    (syntax-case x ()
+      ((_ (it origin) (others ...) ...)
+       #'(let ((it origin))
+           (package (inherit it) (others ...) ...)))
+      ((_ () (others ...) ...)
+       #'(package (others ...) ...)))))
