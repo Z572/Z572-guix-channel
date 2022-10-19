@@ -18,7 +18,7 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public emacs-next-29
-  (let ((base emacs-next)
+  (let ((base emacs-next-pgtk)
         (commit "084ac1e5147558b448af41fbfebc0a99a578819c")
         (revision "14"))
     (package
