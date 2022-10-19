@@ -18,32 +18,25 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public emacs-next-29
-  (let ((emacs emacs-pgtk-native-comp)
-        (commit "c6ff592663e93c43ee36ba441ada5639305fee75") (revision "13"))
+  (let ((base emacs-next)
+        (commit "084ac1e5147558b448af41fbfebc0a99a578819c")
+        (revision "14"))
     (package
-      (inherit emacs)
+      (inherit base)
       (name "emacs-next-29")
       (version (git-version "29.0.5" revision commit))
       (source (origin
-                (inherit (package-source emacs))
+                (inherit (package-source base))
                 (method git-fetch)
                 (uri (git-reference
                       (url "https://git.savannah.gnu.org/git/emacs.git/")
                       (commit commit)))
                 (sha256
                  (base32
-                  "071zi474j5g6s8kwisbmhl17cgxj26ibxrmipfv4k7hsm045yfa7"))
+                  "0yk0vaswh8gqclgmx1fha83d14k5qfwmyidacw0jzs9mp8ssn71j"))
                 (file-name (git-file-name name version))))
-      (arguments
-       (substitute-keyword-arguments (package-arguments emacs)
-         ((#:configure-flags flags
-           ''()) `(cons* "--with-xwidgets" "--with-xinput2"
-                         ,flags))))
-      (propagated-inputs (modify-inputs (package-propagated-inputs
-                                         emacs)
-                                        (prepend gsettings-desktop-schemas glib-networking)))
-      (inputs (modify-inputs (package-inputs emacs)
-                             (prepend libwebp xinput sqlite webkitgtk-with-libsoup2))))))
+      (inputs (modify-inputs (package-inputs base)
+                             (prepend libwebp xinput sqlite))))))
 
 (define-public emacs-with-tree-sitter
   (let ((commit "b74eedc7042f7e90e6a9c79e9c58f832d6c71999")
