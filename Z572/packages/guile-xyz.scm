@@ -113,81 +113,83 @@ archives or ACLs, but it seems to mostly work...")
 
 (define-public guile3.0-g-wrap
   (package (inherit g-wrap)
-           (name "guile3.0-g-wrap")
-           (arguments
-            (substitute-keyword-arguments (package-arguments g-wrap)
-              ;; ((#:imported-modules modules '())
-              ;;  `((ice-9 match)
-              ;;    (ice-9 popen)
-              ;;    (ice-9 rdelim)
-              ;;    ,@modules
-              ;;    ,@%gnu-build-system-modules))
-              ;; ((#:modules modules '())
-              ;;  `((ice-9 popen)
-              ;;    (ice-9 rdelim)
-              ;;    (ice-9 match)
-              ;;    ,@modules
-              ;;    ,@%gnu-build-system-modules))
-              ((#:make-flags flags ''())
-               `(cons "GUILE_AUTO_COMPILE=0" ,flags))
-              ((#:phases phase ''())
-               `(modify-phases ,phase
-                  (add-before 'build 'fix-build
-                    (lambda* (#:key outputs #:allow-other-keys)
-                      (substitute* "guile/g-wrap/guile-runtime.c"
-                        (("scm_class_([a-z]+)" all first)
-                         (string-append "scm_c_public_ref(\"oop goops\",\"<" first ">\")")))))
-                  (add-after 'unpack 'set-indent-program-path
-                    (lambda* (#:key inputs #:allow-other-keys)
-                      (substitute* "g-wrap/util.scm"
-                        (("indent \\~S")
-                         (string-append (search-input-file inputs "/bin/indent") " ~S")))))
-                  (add-before 'pre-configure 'allow-guile3
-                    (lambda _
-                      (substitute* "configure"
-                        (("2\\.2 2\\.0")
-                         "3.0 2.2 2.0"))))
-                  ;; (add-after 'install 'compile-go-file
-                  ;;   (lambda* (#:key inputs outputs #:allow-other-keys)
-                  ;;     (let* ((out (pk 'out (assoc-ref outputs "out")))
-                  ;;            (guile (search-input-file inputs "/bin/guile"))
-                  ;;            (effective (pk 'effective(read-line (open-pipe* OPEN_READ
-                  ;;                                                            guile
-                  ;;                                                            "-c" "(display (effective-version))"))))
-                  ;;            (dir (pk 'dir (string-append out "/share/guile/site/" effective)))
-                  ;;            (files (cons "./g-wrap.scm" (with-directory-excursion dir
-                  ;;                                          (find-files "./g-wrap"
-                  ;;                                                      "\\.scm$"))))
-                  ;;            (guild (search-input-file inputs "/bin/guild"))
-                  ;;            (go-dir (string-append out "/lib/guile/" effective "/site-ccache/")))
-                  ;;       ;; (setenv "GUILE_LOAD_PATH"
-                  ;;       ;;         (string-append dir
-                  ;;       ;;                        (match (getenv "GUILE_LOAD_PATH")
-                  ;;       ;;                          (#f "")
-                  ;;       ;;                          (path (string-append ":" path)))))
-                  ;;       (setenv "GUILE_LOAD_COMPILED_PATH"
-                  ;;               (string-append go-dir
-                  ;;                              (match (getenv "GUILE_LOAD_COMPILED_PATH")
-                  ;;                                (#f "")
-                  ;;                                (path (string-append ":" path)))))
-                  ;;       (mkdir-p go-dir)
-                  ;;       (for-each
-                  ;;        (lambda (file)
-                  ;;          (invoke
-                  ;;           guild "compile"
-                  ;;           "-L" dir
-                  ;;           "-o" (string-append go-dir (basename file ".scm") ".go")
-                  ;;           (string-append dir "/" file)))
-                  ;;        files))))
-                  ))))
-           (inputs
-            (modify-inputs
-                (package-inputs g-wrap)
-              (append indent)))
-           (propagated-inputs
-            (modify-inputs
-                (package-propagated-inputs g-wrap)
-              (replace "guile" guile-3.0-latest)))))
+    (name "guile3.0-g-wrap")
+    (arguments
+     (substitute-keyword-arguments (package-arguments g-wrap)
+       ;; ((#:imported-modules modules '())
+       ;;  `((ice-9 match)
+       ;;    (ice-9 popen)
+       ;;    (ice-9 rdelim)
+       ;;    ,@modules
+       ;;    ,@%gnu-build-system-modules))
+       ;; ((#:modules modules '())
+       ;;  `((ice-9 popen)
+       ;;    (ice-9 rdelim)
+       ;;    (ice-9 match)
+       ;;    ,@modules
+       ;;    ,@%gnu-build-system-modules))
+       ((#:make-flags flags ''())
+        `(cons "GUILE_AUTO_COMPILE=0" ,flags))
+       ((#:phases phase ''())
+        `(modify-phases ,phase
+           (add-before 'build 'fix-build
+             (lambda* (#:key outputs #:allow-other-keys)
+               (substitute* "guile/g-wrap/guile-runtime.c"
+                 (("scm_class_([a-z]+)" all first)
+                  (string-append "scm_c_public_ref(\"oop goops\",\"<" first ">\")")))))
+           (add-after 'unpack 'set-indent-program-path
+             (lambda* (#:key inputs #:allow-other-keys)
+               (substitute* "g-wrap/util.scm"
+                 (("indent \\~S")
+                  (string-append (search-input-file inputs "/bin/indent") " ~S")))))
+           (add-before 'pre-configure 'allow-guile3
+             (lambda _
+               (substitute* "configure"
+                 (("2\\.2 2\\.0")
+                  "3.0 2.2 2.0"))))
+           ;; (add-after 'install 'compile-go-file
+           ;;   (lambda* (#:key inputs outputs #:allow-other-keys)
+           ;;     (let* ((out (pk 'out (assoc-ref outputs "out")))
+           ;;            (guile (search-input-file inputs "/bin/guile"))
+           ;;            (effective (pk 'effective(read-line (open-pipe* OPEN_READ
+           ;;                                                            guile
+           ;;                                                            "-c" "(display (effective-version))"))))
+           ;;            (dir (pk 'dir (string-append out "/share/guile/site/" effective)))
+           ;;            (files (cons "./g-wrap.scm" (with-directory-excursion dir
+           ;;                                          (find-files "./g-wrap"
+           ;;                                                      "\\.scm$"))))
+           ;;            (guild (search-input-file inputs "/bin/guild"))
+           ;;            (go-dir (string-append out "/lib/guile/" effective "/site-ccache/")))
+           ;;       ;; (setenv "GUILE_LOAD_PATH"
+           ;;       ;;         (string-append dir
+           ;;       ;;                        (match (getenv "GUILE_LOAD_PATH")
+           ;;       ;;                          (#f "")
+           ;;       ;;                          (path (string-append ":" path)))))
+           ;;       (setenv "GUILE_LOAD_COMPILED_PATH"
+           ;;               (string-append go-dir
+           ;;                              (match (getenv "GUILE_LOAD_COMPILED_PATH")
+           ;;                                (#f "")
+           ;;                                (path (string-append ":" path)))))
+           ;;       (mkdir-p go-dir)
+           ;;       (for-each
+           ;;        (lambda (file)
+           ;;          (invoke
+           ;;           guild "compile"
+           ;;           "-L" dir
+           ;;           "-o" (string-append go-dir (basename file ".scm") ".go")
+           ;;           (string-append dir "/" file)))
+           ;;        files))))
+           ))))
+    (inputs
+     (modify-inputs
+      (package-inputs g-wrap)
+      (append indent)))
+    (propagated-inputs
+     (modify-inputs
+      (package-propagated-inputs g-wrap)
+      (replace "guile" guile-3.0-latest)
+      ;; for pc file
+      (append libffi)))))
 
 (define-public guile3.0-gnome
   (package (inherit guile-gnome)
