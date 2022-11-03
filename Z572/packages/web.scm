@@ -1,4 +1,5 @@
 (define-module (Z572 packages web)
+  #:use-module (Z572 packages)
   #:use-module (gnu packages web)
   #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
@@ -8,12 +9,10 @@
   #:use-module (guix packages))
 
 (define-public nginx-with-realip
-  (package
-    (inherit nginx)
-    (name "nginx-with-realip")
+  (modifyed-package (o nginx)
+    (name (string-append name "-with-realip"))
     (arguments
-     (substitute-keyword-arguments
-         (package-arguments nginx)
+     (substitute-keyword-arguments arguments
        ((#:configure-flags flags #~''())
         #~(cons "--with-http_realip_module" #$flags))))))
 
