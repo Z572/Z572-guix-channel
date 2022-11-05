@@ -1,4 +1,5 @@
 (define-module (Z572 packages text-editors)
+  #:use-module (Z572 packages)
   #:use-module (guix packages)
   #:use-module (guix git-download)
   #:use-module (guix utils)
@@ -9,9 +10,9 @@
 (define-public texmacs-with-guile3
   (let ((commit "77d3fa5df0d4a7aa1def6a956eb2972ef173ac33")
         (revision "1"))
-    (package
-      (inherit texmacs)
-      (name "texmacs-with-guile3")
+
+    (modifyed-package (p texmacs)
+      (name  (string-append name "-with-guile3"))
       (version (git-version "2.1" revision commit))
       (source
        (origin
@@ -24,9 +25,9 @@
           (base32 "1f95w66da13hkk2svfxgmz5arqy968hvhx9jlwmv8gc04swdcxjk"))))
       (build-system gnu-build-system)
       (inputs
-       (modify-inputs (package-inputs texmacs)
-         (replace "guile" guile-3.0-latest)))
-      (arguments (substitute-keyword-arguments (package-arguments texmacs)
+       (modify-inputs inputs
+                      (replace "guile" guile-3.0-latest)))
+      (arguments (substitute-keyword-arguments arguments
                    ((#:phases phases)
                     `(modify-phases ,phases
                        (add-after 'unpack 'chdir-src
