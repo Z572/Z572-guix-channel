@@ -68,37 +68,3 @@
   #:use-module (ice-9 match)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages pcre))
-
-(define-public gtksourceview-5
-  (package
-    (inherit gtksourceview)
-    (name "gtksourceview")
-    (version "5.2.0")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "mirror://gnome/sources/" name "/"
-                                  (version-major+minor version) "/"
-                                  name "-" version ".tar.xz"))
-              (sha256
-               (base32
-                "1s9hjir3rlb5x8qpsv9f3diq3fmlkpc2g2505zi6rxal4sh4zcy9"))))
-    (build-system meson-build-system)
-    (arguments
-     (substitute-keyword-arguments (package-arguments gtksourceview)
-       ((#:glib-or-gtk? _ )
-        #t)
-       ((#:phases phases ''())
-        `(modify-phases ,phases
-           (add-after 'unpack 'stop-update-icon-cache
-             (lambda _
-               (substitute* "meson.build"
-                 (("gtk_update_icon_cache: true,")
-                  "gtk_update_icon_cache: false,")
-                 (("meson\\.add_install_script.*$")
-                  "true\n"))))))))
-    (inputs
-     (modify-inputs (package-inputs gtksourceview)
-       (prepend pcre2)))
-    (propagated-inputs
-     (modify-inputs (package-propagated-inputs gtksourceview)
-       (replace "gtk+" gtk)))))
