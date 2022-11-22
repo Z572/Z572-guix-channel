@@ -1,6 +1,7 @@
 (define-module (Z572 packages text-editors)
   #:use-module (Z572 packages)
   #:use-module (guix packages)
+  #:use-module (guix gexp)
   #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (guix build-system gnu)
@@ -26,18 +27,18 @@
       (build-system gnu-build-system)
       (inputs
        (modify-inputs inputs
-                      (replace "guile" guile-3.0-latest)))
+         (replace "guile" guile-3.0-latest)))
       (arguments (substitute-keyword-arguments arguments
                    ((#:phases phases)
-                    `(modify-phases ,phases
-                       (add-after 'unpack 'chdir-src
-                         (lambda _ (chdir "src")))
-                       (add-before 'reset-gzip-timestamps 'make-files-writable
-                         (lambda* (#:key outputs #:allow-other-keys)
-                           ;; Make sure .gz files are writable so that the
-                           ;; 'reset-gzip-timestamps' phase can do its work.
-                           (let ((out (assoc-ref outputs "out")))
-                             (for-each make-file-writable
-                                       (find-files out "\\.gz$")))))))
-                   ((#:configure-flags flags ''())
-                    `(cons "--enable-guile2" ,flags)))))))
+                    #~(modify-phases #$phases
+                        (add-after 'unpack 'chdir-src
+                          (lambda _ (chdir "src")))
+                        (add-before 'reset-gzip-timestamps 'make-files-writable
+                          (lambda* (#:key outputs #:allow-other-keys)
+                            ;; Make sure .gz files are writable so that the
+                            ;; 'reset-gzip-timestamps' phase can do its work.
+                            (let ((out (assoc-ref outputs "out")))
+                              (for-each make-file-writable
+                                        (find-files out "\\.gz$")))))))
+                   ((#:configure-flags flags #~'())
+                    #~(cons "--enable-guile2" #$flags)))))))
