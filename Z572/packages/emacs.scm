@@ -18,8 +18,8 @@
 
 (define-public emacs-next-29
   (let ((base emacs-next-pgtk)
-        (commit "084ac1e5147558b448af41fbfebc0a99a578819c")
-        (revision "14"))
+        (commit "350918e7be82fca046911073b360518173169255")
+        (revision "15"))
     (package
       (inherit base)
       (name "emacs-next-29")
@@ -32,7 +32,11 @@
                       (commit commit)))
                 (sha256
                  (base32
-                  "0yk0vaswh8gqclgmx1fha83d14k5qfwmyidacw0jzs9mp8ssn71j"))
+                  "0j9xrq7nd00w3jdxhg11c5qpap51xv478n30s915sy3s6rkg2rzi"))
                 (file-name (git-file-name name version))))
+      (arguments
+       (substitute-keyword-arguments (package-arguments base)
+         ((#:configure-flags flags ''())
+          `(cons* "--with-tree-sitter" ,flags))))
       (inputs (modify-inputs (package-inputs base)
-                (prepend libwebp xinput sqlite))))))
+                             (prepend libwebp xinput sqlite tree-sitter))))))
