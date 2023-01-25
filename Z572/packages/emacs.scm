@@ -18,8 +18,8 @@
 
 (define-public emacs-next-29
   (let ((base emacs-next-pgtk)
-        (commit "350918e7be82fca046911073b360518173169255")
-        (revision "15"))
+        (commit "8b87d095acfb23b527f955873a59dd9c13ffc9b4")
+        (revision "16"))
     (package
       (inherit base)
       (name "emacs-next-29")
@@ -32,7 +32,7 @@
                       (commit commit)))
                 (sha256
                  (base32
-                  "0j9xrq7nd00w3jdxhg11c5qpap51xv478n30s915sy3s6rkg2rzi"))
+                  "1p8aqfzxz22gycp4d5k3kwkm2wd7ja2hjmq4j3h15jpa6q5pr7qa"))
                 (file-name (git-file-name name version))))
       (arguments
        (substitute-keyword-arguments (package-arguments base)
