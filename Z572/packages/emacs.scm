@@ -16,14 +16,14 @@
   #:use-module (gnu packages gcc)
   #:use-module ((guix licenses) #:prefix license:))
 
-(define-public emacs-next-29
+(define-public emacs-next-30
   (let ((base emacs-next-pgtk)
-        (commit "8b87d095acfb23b527f955873a59dd9c13ffc9b4")
-        (revision "16"))
+        (commit "ab7c2f809219b0c29e7ee2b5ac66f18b0e657080")
+        (revision "0"))
     (package
       (inherit base)
-      (name "emacs-next-29")
-      (version (git-version "29.0.5" revision commit))
+      (name "emacs-next-30")
+      (version (git-version "30.0.5" revision commit))
       (source (origin
                 (inherit (package-source base))
                 (method git-fetch)
@@ -32,11 +32,7 @@
                       (commit commit)))
                 (sha256
                  (base32
-                  "1p8aqfzxz22gycp4d5k3kwkm2wd7ja2hjmq4j3h15jpa6q5pr7qa"))
+                  "10d6ihw549ivv6mwssy02qdmsi4vf28yyh81581prflgrz9r5r26"))
                 (file-name (git-file-name name version))))
-      (arguments
-       (substitute-keyword-arguments (package-arguments base)
-         ((#:configure-flags flags ''())
-          `(cons* "--with-tree-sitter" ,flags))))
       (inputs (modify-inputs (package-inputs base)
-                             (prepend libwebp xinput sqlite tree-sitter))))))
+                             (prepend libwebp))))))
