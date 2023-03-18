@@ -16,9 +16,9 @@
 (define* (make-linux-cjktty-patch version #:key
                                   (major (version-major version))
                                   (version-in-patch-name (version-major+minor version))
-                                  (commit "2913a4de155dc3154f6071a4e320943189bfd79d")
-                                  (hash "1qh9x3mh9fm25q9mdfwpvbk49fdzdapf66vmh7zsavb4rslhvzpl")
-                                  (revision "5"))
+                                  (commit "303dff435a7a0fadbd6215cb59e52dcd656e1d47")
+                                  (hash "1fgwg318y4sb3i21hh42gwcc24f60w79mks53np56aj860yn7hzw")
+                                  (revision "6"))
   (let ((orig (origin
                 (method git-fetch)
                 (uri (git-reference
