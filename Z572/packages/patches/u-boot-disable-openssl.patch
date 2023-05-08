@@ -1,0 +1,216 @@
+From b2dff4fe9d1a53bbe3565435e190db19e7d6f4e7 Mon Sep 17 00:00:00 2001
+From: Z572 <zhengjunjie@iscas.ac.cn>
+Date: Mon, 8 May 2023 18:00:55 +0800
+Subject: [PATCH] remove openssl
+
+---
+ include/image.h    |  2 ++
+ tools/fit_image.c  |  3 ++-
+ tools/image-host.c |  4 ++++
+ tools/kwbimage.c   | 21 +++++++++++++++++++--
+ 4 files changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/include/image.h b/include/image.h
+index e5e12ce5..5c858a16 100644
+--- a/include/image.h
++++ b/include/image.h
+@@ -1172,6 +1172,7 @@ int fit_image_hash_get_value(const void *fit, int noffset, uint8_t **value,
+ 
+ int fit_set_timestamp(void *fit, int noffset, time_t timestamp);
+ 
++#ifdef CONFIG_FIT_PRELOAD
+ /**
+  * fit_pre_load_data() - add public key to fdt blob
+  *
+@@ -1186,6 +1187,7 @@ int fit_set_timestamp(void *fit, int noffset, time_t timestamp);
+  *	< 0, on failure
+  */
+ int fit_pre_load_data(const char *keydir, void *keydest, void *fit);
++#endif
+ 
+ int fit_cipher_data(const char *keydir, void *keydest, void *fit,
+ 		    const char *comment, int require_keys,
+diff --git a/tools/fit_image.c b/tools/fit_image.c
+index 923a9755..7a73f24a 100644
+--- a/tools/fit_image.c
++++ b/tools/fit_image.c
+@@ -59,9 +59,10 @@ static int fit_add_file_data(struct image_tool_params *params, size_t size_inc,
+ 		ret = fit_set_timestamp(ptr, 0, time);
+ 	}
+ 
++#ifdef CONFIG_FIT_PRELOAD
+ 	if (!ret)
+ 		ret = fit_pre_load_data(params->keydir, dest_blob, ptr);
+-
++#endif
+ 	if (!ret) {
+ 		ret = fit_cipher_data(params->keydir, dest_blob, ptr,
+ 				      params->comment,
+diff --git a/tools/image-host.c b/tools/image-host.c
+index 4e0512be..da70fcb4 100644
+--- a/tools/image-host.c
++++ b/tools/image-host.c
+@@ -14,9 +14,11 @@
+ #include <image.h>
+ #include <version.h>
+ 
++#ifdef CONFIG_FIT_PRELOAD
+ #include <openssl/pem.h>
+ #include <openssl/evp.h>
+ 
++#endif
+ /**
+  * fit_set_hash_value - set hash value in requested has node
+  * @fit: pointer to the FIT format image header
+@@ -1119,6 +1121,7 @@ static int fit_config_add_verification_data(const char *keydir,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_FIT_PRELOAD
+ /*
+  * 0) open file (open)
+  * 1) read certificate (PEM_read_X509)
+@@ -1227,6 +1230,7 @@ int fit_pre_load_data(const char *keydir, void *keydest, void *fit)
+  out:
+ 	return ret;
+ }
++#endif
+ 
+ int fit_cipher_data(const char *keydir, void *keydest, void *fit,
+ 		    const char *comment, int require_keys,
+diff --git a/tools/kwbimage.c b/tools/kwbimage.c
+index 6abb9f2d..d8159070 100644
+--- a/tools/kwbimage.c
++++ b/tools/kwbimage.c
+@@ -19,6 +19,7 @@
+ #include <stdint.h>
+ #include "kwbimage.h"
+ 
++#ifdef CONFIG_KWB_SECURE
+ #include <openssl/bn.h>
+ #include <openssl/rsa.h>
+ #include <openssl/pem.h>
+@@ -44,7 +45,7 @@ void EVP_MD_CTX_cleanup(EVP_MD_CTX *ctx)
+ 	EVP_MD_CTX_reset(ctx);
+ }
+ #endif
+-
++#endif
+ /* fls - find last (most-significant) bit set in 4-bit integer */
+ static inline int fls4(int num)
+ {
+@@ -62,8 +63,9 @@ static inline int fls4(int num)
+ 
+ static struct image_cfg_element *image_cfg;
+ static int cfgn;
++#ifdef CONFIG_KWB_SECURE
+ static int verbose_mode;
+-
++#endif
+ struct boot_mode {
+ 	unsigned int id;
+ 	const char *name;
+@@ -278,6 +280,8 @@ image_count_options(unsigned int optiontype)
+ 	return count;
+ }
+ 
++#if defined(CONFIG_KWB_SECURE)
++
+ static int image_get_csk_index(void)
+ {
+ 	struct image_cfg_element *e;
+@@ -288,6 +292,7 @@ static int image_get_csk_index(void)
+ 
+ 	return e->csk_idx;
+ }
++#endif
+ 
+ static bool image_get_spezialized_img(void)
+ {
+@@ -432,6 +437,7 @@ static uint8_t baudrate_to_option(unsigned int baudrate)
+ 	}
+ }
+ 
++#if defined(CONFIG_KWB_SECURE)
+ static void kwb_msg(const char *fmt, ...)
+ {
+ 	if (verbose_mode) {
+@@ -926,6 +932,7 @@ static int kwb_dump_fuse_cmds(struct secure_hdr_v1 *sec_hdr)
+ done:
+ 	return ret;
+ }
++#endif
+ 
+ static size_t image_headersz_align(size_t headersz, uint8_t blockid)
+ {
+@@ -1079,11 +1086,13 @@ static size_t image_headersz_v1(int *hasext)
+ 	 */
+ 	headersz = sizeof(struct main_hdr_v1);
+ 
++#if defined(CONFIG_KWB_SECURE)
+ 	if (image_get_csk_index() >= 0) {
+ 		headersz += sizeof(struct secure_hdr_v1);
+ 		if (hasext)
+ 			*hasext = 1;
+ 	}
++#endif
+ 
+ 	cpu_sheeva = image_is_cpu_sheeva();
+ 
+@@ -1270,6 +1279,7 @@ err_close:
+ 	return -1;
+ }
+ 
++#if defined(CONFIG_KWB_SECURE)
+ static int export_pub_kak_hash(RSA *kak, struct secure_hdr_v1 *secure_hdr)
+ {
+ 	FILE *hashf;
+@@ -1382,6 +1392,7 @@ static int add_secure_header_v1(struct image_tool_params *params, uint8_t *ptr,
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static void finish_register_set_header_v1(uint8_t **cur, uint8_t **next_ext,
+ 					  struct register_set_hdr_v1 *register_set_hdr,
+@@ -1406,7 +1417,9 @@ static void *image_create_v1(size_t *imagesz, struct image_tool_params *params,
+ 	struct main_hdr_v1 *main_hdr;
+ 	struct opt_hdr_v1 *ohdr;
+ 	struct register_set_hdr_v1 *register_set_hdr;
++#if defined(CONFIG_KWB_SECURE)
+ 	struct secure_hdr_v1 *secure_hdr = NULL;
++#endif
+ 	size_t headersz;
+ 	uint8_t *image, *cur;
+ 	int hasext = 0;
+@@ -1491,6 +1504,7 @@ static void *image_create_v1(size_t *imagesz, struct image_tool_params *params,
+ 	if (main_hdr->blockid == IBR_HDR_PEX_ID)
+ 		main_hdr->srcaddr = cpu_to_le32(0xFFFFFFFF);
+ 
++#if defined(CONFIG_KWB_SECURE)
+ 	if (image_get_csk_index() >= 0) {
+ 		/*
+ 		 * only reserve the space here; we fill the header later since
+@@ -1502,6 +1516,7 @@ static void *image_create_v1(size_t *imagesz, struct image_tool_params *params,
+ 		next_ext = &secure_hdr->next;
+ 	}
+ 
++#endif
+ 	datai = 0;
+ 	for (cfgi = 0; cfgi < cfgn; cfgi++) {
+ 		e = &image_cfg[cfgi];
+@@ -1552,9 +1567,11 @@ static void *image_create_v1(size_t *imagesz, struct image_tool_params *params,
+ 					      &datai, delay);
+ 	}
+ 
++#if defined(CONFIG_KWB_SECURE)
+ 	if (secure_hdr && add_secure_header_v1(params, ptr, payloadsz + headersz,
+ 					       headersz, image, secure_hdr))
+ 		return NULL;
++#endif
+ 
+ 	*imagesz = headersz;
+ 
+-- 
+2.39.2
+
