@@ -39,25 +39,7 @@
               (add-after 'unpack 'set-environment
                 (lambda* (#:key inputs #:allow-other-keys)
                   (setenv "OPENSBI" (search-input-file inputs
-                                                       "fw_dynamic.bin"))))
-              ;; (add-after 'build 'build-toc1
-              ;;                 (lambda _
-              ;;                   (call-with-output-file "toc1.cfg"
-              ;;                     (lambda (port)
-              ;;                       (format port
-              ;;                               "[opensbi]
-              ;; file = ~a
-              ;; addr = 0x40000000
-              ;; [dtb]
-              ;; file = arch/riscv/dts/sun20i-d1-lichee-rv-dock.dtb
-              ;; addr = 0x44000000
-              ;; [u-boot]
-              ;; file = u-boot-nodtb.bin
-              ;; addr = 0x4a000000"
-              ;;                               (getenv "OPENSBI"))))
-              ;;                   (invoke "./tools/mkimage" "-T" "sunxi_toc1" "-d" "toc1.cfg" "u-boot.toc1")))
-              ;; (add-after 'install 'install-toc1)
-              ))))
+                                                       "fw_dynamic.bin"))))))))
       (inputs
        (modify-inputs (package-inputs base)
          (append opensbi-generic))))))
