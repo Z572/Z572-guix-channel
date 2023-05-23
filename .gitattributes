@@ -1,1 +1,2 @@
 Z572.scm filter=git-crypt diff=git-crypt
+Z572/keys.scm filter=git-crypt diff=git-crypt
