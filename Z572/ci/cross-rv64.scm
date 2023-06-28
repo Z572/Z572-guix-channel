@@ -7,5 +7,5 @@
                 (map (lambda (package)
                        (package-cross-job store (job-name package)
                                           package target "x86_64-linux"))
-                     (packages-to-cross-build target)))
+                     ((@@ (gnu ci) all-packages))))
               (list "riscv64-linux-gnu")))
