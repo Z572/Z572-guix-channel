@@ -139,6 +139,7 @@
            "-Dsysvrcnd-path="
            "-Dcreate-log-dirs=false"
            "-Dhwdb=false"
+           "-Dmode=release"
            "-Drpmmacrosdir=no"
            "-Dsbat-distro='Guix System'"
            "-Dsbat-distro-summary='guix'"
