@@ -224,17 +224,19 @@
             (lambda _
               (delete-file (string-append #$output "/lib/environment.d/99-environment.conf")))))))
     (native-inputs
-     `(("docbook-xml" ,docbook-xml-4.5)
-       ("docbook-xml-4.2" ,docbook-xml-4.2)
-       ("docbook-xsl" ,docbook-xsl)
-       ("gettext" ,gettext-minimal)
-       ("gperf" ,gperf)
-       ("libxml2" ,libxml2)                     ;for XML_CATALOG_FILES
-       ("m4" ,m4)
-       ("pkg-config" ,pkg-config)
-       ("python" ,python)
-       ("xsltproc" ,libxslt)
-       ("python-jinja2" ,python-jinja2)))
+     (list
+      docbook-xml-4.5
+      docbook-xml-4.2
+      docbook-xsl
+      gettext-minimal
+      gperf
+      libxml2
+      m4
+      pkg-config
+      python
+      libxslt
+      python-jinja2
+      glib))
     (inputs
      (append
       (if (not (target-riscv64?))
@@ -258,7 +260,6 @@
             pcre2
             gobject-introspection
             p11-kit
-            glib
             kmod
             audit
             lz4
