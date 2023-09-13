@@ -3,7 +3,7 @@
  #+begin_src scheme
    (cons* (channel
            (name 'z572)
-           (url "https://notabug.org/Z572/z572-guix-channel"))
+           (url "https://github.com/Z572/Z572-guix-channel"))
           %default-channels)
  #+end_src
 
